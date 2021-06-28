@@ -14,6 +14,7 @@ export default function LoginScreen() {
         <TextInput
         label="Email"
         value={email}
+        secureTextEntry={true}
         onChange={updatedEmail=>setEmail(updatedEmail)}
         />
       </View>
