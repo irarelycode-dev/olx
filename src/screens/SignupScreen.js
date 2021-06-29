@@ -1,23 +1,24 @@
-import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet,KeyboardAvoidingView} from 'react-native';
+import React from 'react';
+import {View, Text,Image ,KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 
-export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function SignupScreen() {
+  const [email, setEail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  function handleLoginSubmit(){
+  function handleSignupSubmit(){
 
   }
 
   return (
-    <KeyboardAvoidingView behavior="position">
+    <KeyboardAvoidingView>
       <View style={styles.box_one}>
-        <Image source={require('../assets/2.jpg')} style={styles.image} />
+        <Image
+          source={require('../assets/2.jpg')}
+          style={styles.image}
+        />
       </View>
-      <View>
-        <Text style={styles.login_text}>Login To Continue</Text>
-      </View>
+      <View><Text style={styles.login_text}>SignUp</Text></View>
       <View style={styles.form_element}>
         <View>
           <TextInput
@@ -34,7 +35,11 @@ export default function LoginScreen() {
             onChangeText={newPassword => setPassword(newPassword)}
           />
         </View>
-        <View><Button mode="contained" onPress={handleLoginSubmit}>Login</Button></View>
+        <View>
+          <Button mode="contained" onPress={handleSignupSubmit}>
+            SignUp
+          </Button>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -51,7 +56,7 @@ const styles = StyleSheet.create({
   },
   form_element: {
     margin: 30,
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly',
   },
   login_text: {
     textAlign: 'center',
