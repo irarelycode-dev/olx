@@ -1,25 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Image,
-  StyleSheet,
   KeyboardAvoidingView,
+  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 
-export default function LoginScreen({navigation}) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default function SignupScreen({navigation}) {
+  const [email, setEail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  function handleLoginSubmit() {}
+  function handleSignupSubmit() {}
 
   return (
-    <KeyboardAvoidingView behavior="padding">
+    <KeyboardAvoidingView>
       <View style={styles.box_one}>
         <Image source={require('../assets/2.jpg')} style={styles.image} />
-        <Text style={styles.login_text}>Login To Continue</Text>
+      </View>
+      <View>
+        <Text style={styles.login_text}>SignUp</Text>
       </View>
       <View style={styles.form_element}>
         <View>
@@ -38,15 +40,11 @@ export default function LoginScreen({navigation}) {
           />
         </View>
         <View>
-          <Button mode="contained" onPress={handleLoginSubmit}>
-            Login
+          <Button mode="contained" onPress={handleSignupSubmit}>
+            SignUp
           </Button>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('signup')}
-            style={{marginTop: 10}}>
-            <Text style={{textAlign: 'center'}}>
-              Don't have an account? Signup?
-            </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('login')}>
+            <Text>SignIn?</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -66,11 +64,6 @@ const styles = StyleSheet.create({
   form_element: {
     margin: 30,
     justifyContent: 'space-evenly',
-  },
-  login_text: {
-    textAlign: 'center',
-    fontSize: 22,
-    marginTop: 20,
   },
   login_text: {
     textAlign: 'center',
