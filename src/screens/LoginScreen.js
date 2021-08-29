@@ -1,17 +1,22 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet,KeyboardAvoidingView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  function handleLoginSubmit(){
-
-  }
+  function handleLoginSubmit() {}
 
   return (
-    <KeyboardAvoidingView behavior="position">
+    <KeyboardAvoidingView behavior="padding">
       <View style={styles.box_one}>
         <Image source={require('../assets/2.jpg')} style={styles.image} />
       </View>
@@ -34,7 +39,18 @@ export default function LoginScreen() {
             onChangeText={newPassword => setPassword(newPassword)}
           />
         </View>
-        <View><Button mode="contained" onPress={handleLoginSubmit}>Login</Button></View>
+        <View>
+          <Button mode="contained" onPress={handleLoginSubmit}>
+            Login
+          </Button>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('signup')}
+            style={{marginTop: 10}}>
+            <Text style={{textAlign: 'center'}}>
+              Don't have an account? Signup?
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -51,7 +67,12 @@ const styles = StyleSheet.create({
   },
   form_element: {
     margin: 30,
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly',
+  },
+  login_text: {
+    textAlign: 'center',
+    fontSize: 22,
+    marginTop: 20,
   },
   login_text: {
     textAlign: 'center',

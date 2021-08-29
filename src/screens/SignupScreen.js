@@ -1,24 +1,28 @@
 import React from 'react';
-import {View, Text,Image ,KeyboardAvoidingView, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 
-export default function SignupScreen() {
+export default function SignupScreen({navigation}) {
   const [email, setEail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  function handleSignupSubmit(){
-
-  }
+  function handleSignupSubmit() {}
 
   return (
     <KeyboardAvoidingView>
       <View style={styles.box_one}>
-        <Image
-          source={require('../assets/2.jpg')}
-          style={styles.image}
-        />
+        <Image source={require('../assets/2.jpg')} style={styles.image} />
       </View>
-      <View><Text style={styles.login_text}>SignUp</Text></View>
+      <View>
+        <Text style={styles.login_text}>SignUp</Text>
+      </View>
       <View style={styles.form_element}>
         <View>
           <TextInput
@@ -39,6 +43,9 @@ export default function SignupScreen() {
           <Button mode="contained" onPress={handleSignupSubmit}>
             SignUp
           </Button>
+          <TouchableOpacity onPress={() => navigation.navigate('login')}>
+            <Text>SignIn?</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
