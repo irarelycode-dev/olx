@@ -29,7 +29,7 @@ const theme = {
     ...DefaultTheme.colors,
     primary: 'deepskyblue',
   },
-};
+};            
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

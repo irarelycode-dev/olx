@@ -19,6 +19,8 @@ export default function LoginScreen({navigation}) {
     <KeyboardAvoidingView behavior="padding">
       <View style={styles.box_one}>
         <Image source={require('../assets/2.jpg')} style={styles.image} />
+      </View>
+      <View>
         <Text style={styles.login_text}>Login To Continue</Text>
       </View>
       <View style={styles.form_element}>
