@@ -6,9 +6,9 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-native-gesture-handler';
-import {SafeAreaView, Text, View, StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -21,6 +21,13 @@ import {
   ListItemsScreen,
   AccountScreen,
 } from './src/screens';
+import auth from '@react-native-firebase/auth';
+
+//custom components
+// import StatusBarCus from './src/docs/StatusBarCus';
+// import SwitchCus from './src/docs/SwitchCus';
+// import ActivityIndicatorCus from './src/docs/ActivityIndicatorCus';
+// import ButtonCus from './src/docs/ButtonCus';
 
 const theme = {
   ...DefaultTheme,
@@ -29,7 +36,7 @@ const theme = {
     ...DefaultTheme.colors,
     primary: 'deepskyblue',
   },
-};            
+};
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,7 +76,17 @@ const TabNavigator = () => (
 );
 
 const Navigation = () => {
-  const user = 'loggedIn';
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser('');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
   return (
     <NavigationContainer>
       {user ? <TabNavigator /> : <AuthNavigator />}
@@ -86,14 +103,4 @@ const App = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-  },
-  bottomTab: {
-    marginBottom: 10,
-  },
-});
-
 export default App;
-``
