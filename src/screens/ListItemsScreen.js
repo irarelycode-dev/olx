@@ -1,8 +1,26 @@
-import React from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
-import {Button, Card, Paragraph} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Linking,
+  Platform,
+  Text,
+} from 'react-native';
+import {
+  Button,
+  Card,
+  Paragraph,
+  ActivityIndicator,
+  Colors,
+} from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
 
 const ListItemsScreen = () => {
+  const [ads, setAds] = useState([]);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const items = [
     {
       name: 'vaccum cleaner',
@@ -23,6 +41,33 @@ const ListItemsScreen = () => {
     },
   ];
 
+  const getItems = async () => {
+    try {
+      setLoading(true);
+      const querySnap = await firestore().collection('ads').get();
+      const adsRes = querySnap.docs.map(docSnapShot => docSnapShot.data());
+      console.log('adRes', adsRes.length);
+      setAds(adsRes);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getItems();
+    return () => {};
+  }, []);
+
+  const openDial = phone => {
+    if (Platform.OS === 'android') {
+      Linking.openURL(`tel:${phone}`);
+    } else {
+      Linking.openURL(`telprompt:${phone}`);
+    }
+  };
+
   const renderFlatListItem = ({item}) => (
     <Card style={styles.card}>
       <Card.Title title={item.name} />
@@ -30,21 +75,39 @@ const ListItemsScreen = () => {
         <Paragraph>{item.description}</Paragraph>
         <Paragraph>{item.year}</Paragraph>
       </Card.Content>
-      <Card.Cover source={{uri: item.image}} />
+      <Card.Cover
+        source={{
+          uri:
+            item.image ||
+            'https://firebasestorage.googleapis.com/v0/b/sell-me-6e72d.appspot.com/o/items%2F1645287374377?alt=media&token=dca3f3b0-b6fb-4142-9412-753da9863deb',
+        }}
+      />
       <Card.Actions>
         <Button>Cancel</Button>
-        <Button>Call Seller</Button>
+        <Button onPress={() => openDial(item.contact)}>Call Seller</Button>
       </Card.Actions>
     </Card>
   );
 
   return (
     <View>
-      <FlatList
-        data={items}
-        keyExtractor={item => item.phone}
-        renderItem={renderFlatListItem}
-      />
+      {loading ? (
+        <ActivityIndicator animating={true} color={Colors.red800} />
+      ) : (
+        <View>
+          {error ? (
+            <Text>Oops :(</Text>
+          ) : (
+            <FlatList
+              data={ads}
+              keyExtractor={(item, index) => index}
+              renderItem={renderFlatListItem}
+              onRefresh={() => getItems()}
+              refreshing={loading}
+            />
+          )}
+        </View>
+      )}
     </View>
   );
 };

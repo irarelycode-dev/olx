@@ -1,7 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
-export default function CreateAdScreen() {
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+
+export default function CreateAdScreen({navigation}) {
   const [productDetails, setProductDetails] = React.useState({
     productname: '',
     price: '',
@@ -9,10 +16,69 @@ export default function CreateAdScreen() {
     yearPurchased: '',
     contact: '',
   });
+  const [image, setImage] = React.useState('');
 
-  function handleSubmitAd() {}
+  async function handleSubmitAd() {
+    try {
+      await firestore()
+        .collection('ads')
+        .add({
+          ...productDetails,
+          image,
+          uuid: auth().currentUser.uid,
+        });
+      Alert.alert('ad posted');
+      setTimeout(() => {
+        setProductDetails({
+          productname: '',
+          price: '',
+          description: '',
+          yearPurchased: '',
+          contact: '',
+        });
+        setImage('');
+        navigation.navigate('Home');
+      }, 1000);
+    } catch (error) {
+      Alert.alert(error);
+    }
+  }
 
-  function uploadImage() {}
+  async function uploadImage() {
+    try {
+      launchCamera({quality: 0.5}, capturedImage => {
+        const storageRef = storage().ref().child(`/items/${Date.now()}`);
+        const uploadTask = storageRef.putFile(capturedImage.uri);
+
+        uploadTask.on(
+          'state_changed',
+          snapshot => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            if (progress === 100) Alert.alert('image uploaded');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          },
+          error => {},
+          () => {
+            storageRef
+              .getDownloadURL(uploadTask.snapshot.ref)
+              .then(downloadURL => {
+                setImage(downloadURL);
+              });
+          },
+        );
+      });
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  }
 
   return (
     <View style={styles.createAdWrapper}>
@@ -83,7 +149,11 @@ export default function CreateAdScreen() {
           mode="contained">
           Upload Image
         </Button>
-        <Button onPress={handleSubmitAd} style={styles.button} mode="contained">
+        <Button
+          onPress={handleSubmitAd}
+          style={styles.button}
+          mode="contained"
+          disabled={image.length>0?false:true}>
           Create Ad
         </Button>
       </View>
