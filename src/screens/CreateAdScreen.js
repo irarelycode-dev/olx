@@ -7,6 +7,7 @@ import firestore, {
 import auth from '@react-native-firebase/auth';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
+import axios from 'axios';
 
 export default function CreateAdScreen({navigation}) {
   const [productDetails, setProductDetails] = React.useState({
@@ -17,6 +18,17 @@ export default function CreateAdScreen({navigation}) {
     contact: '',
   });
   const [image, setImage] = React.useState('');
+
+  const sendNotification = async () => {
+    try{
+      const querySnap = await firestore().collection('userToken').get();
+      const tokens = querySnap.docs.map(docSnap => docSnap.data().token);
+      //send these tokens to backend service and bulk send notifications
+    }catch(error){
+      console.log('error',error);
+      Alert.alert(error);
+    }
+  };
 
   async function handleSubmitAd() {
     try {
@@ -39,6 +51,7 @@ export default function CreateAdScreen({navigation}) {
         setImage('');
         navigation.navigate('Home');
       }, 1000);
+      sendNotification();
     } catch (error) {
       Alert.alert(error);
     }
@@ -153,7 +166,7 @@ export default function CreateAdScreen({navigation}) {
           onPress={handleSubmitAd}
           style={styles.button}
           mode="contained"
-          disabled={image.length>0?false:true}>
+          disabled={image.length > 0 ? false : true}>
           Create Ad
         </Button>
       </View>

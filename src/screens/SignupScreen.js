@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore'
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
 
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = React.useState('');
@@ -24,6 +27,11 @@ export default function SignupScreen({navigation}) {
         email,
         password,
       );
+      if(result){
+        messaging().getToken().then(token=>{
+          firestore().collection('userToken').add({token})
+        });
+      }
     } catch (error) {
       Alert.alert(`${error.message}`);
     }

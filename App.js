@@ -95,6 +95,7 @@ const Navigation = () => {
 };
 
 const App = () => {
+
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" backgroundColor="deepskyblue" />
